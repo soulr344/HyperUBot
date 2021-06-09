@@ -6,19 +6,31 @@
 # compliance with the DBADPL-B (So use it freely, but if you make a
 # shitload of cash, buy me a beer or a pizza. Thanks.
 
-from userbot import tgclient, MODULE_DESC, MODULE_DICT, log, MODULE_INFO
+from userbot import tgclient, log
 from telethon.events import NewMessage
-from userbot.include.aux_funcs import fetch_user, module_info
+from userbot.include.aux_funcs import fetch_user
 from userbot.config import GbanConfigs as cfg
 from os.path import basename
+from userbot.sysutils.registration import (register_cmd_usage,
+                                           register_module_desc,
+                                           register_module_info)
 from asyncio.exceptions import TimeoutError as Timeout
+from userbot.sysutils.configuration import getConfig
+from userbot.sysutils.event_handler import EventHandler
+
+from asyncio import sleep
+from logging import getLogger
+
+log = getLogger(__name__)
+ehandler = EventHandler(log)
+LOGGING = getConfig("LOGGING")
 
 VERSION = "1.0.2"
 
 GBAN = cfg.GBAN
 GBAN_BOT_IDS = cfg.GBAN_BOT_IDS
 
-@tgclient.on(NewMessage(pattern=r"^\.gban(?: |$)(.*)", outgoing=True))
+@ehandler.on(command="gban", hasArgs=True, outgoing=True)
 async def gbanner(request):
     if not GBAN:
         await request.edit("`You haven't enable the gban router in config.py!`")
@@ -56,7 +68,7 @@ async def gbanner(request):
     await request.edit("`" + response + "`")
     return
 
-@tgclient.on(NewMessage(pattern=r"^\.ungban(?: |$)(.*)", outgoing=True))
+@ehandler.on(command="ungban", hasArgs=True, outgoing=True)
 async def ungbanner(request):
     if not GBAN:
         await request.edit("`You haven't enable the gban router in config.py!`")
@@ -94,7 +106,7 @@ async def ungbanner(request):
     await request.edit("`" + response + "`")
     return
 
-@tgclient.on(NewMessage(pattern=r"^\.gkick(?: |$)(.*)", outgoing=True))
+@ehandler.on(command="gkick", hasArgs=True, outgoing=True)
 async def ungkicker(request):
     if not GBAN:
         await request.edit("`You haven't enable the gban router in config.py!`")
@@ -132,16 +144,17 @@ async def ungkicker(request):
     await request.edit("`" + response + "`")
     return
 
-DESC = "nunos-private-repo modules are not for human consumption! This is the global bans module, which will redirect the gban command to group management bots (based on Marie), gbanning people on multiple bots at the same time."
-USAGE = "`.gban` <optional: user identifier> \
-        \nUsage: Globally bans a user in the specified Marie based bots. \
-        \n\n`.ungban` <optional: user identifier> \
-        \nUsage: Globally unbans a user in the specified Marie based bots. \
-        \n\n`.gkick` <optional: user identifier> \
-        \nUsage: Globally kicks a user in the specified Marie based bots. \
-        **ALERT**: This module is not suitable for human consumption! Please refrain from using it unless you know what you are doing!"
+DESC = "~nunos-private-repo modules are not for human consumption! This is the global bans module, which will redirect the gban command to group management bots (based on Marie), gbanning people on multiple bots at the same time.~"
+USAGE = {"gban": "`.gban` <optional: user identifier> \
+        \nUsage: Globally bans a user in the specified Marie based bots.",
+        "ungban": "\n\n`.ungban` <optional: user identifier> \
+        \nUsage: Globally unbans a user in the specified Marie based bots.",
+        "gkick": "\n\n`.gkick` <optional: user identifier> \
+        \nUsage: Globally kicks a user in the specified Marie based bots."}
 
+for cmd in ("gban", "gkick", "ungban"):
+    register_cmd_usage(cmd,
+                       "",
+                       USAGE[cmd])
 
-MODULE_DESC.update({basename(__file__)[:-3]: DESC})
-MODULE_DICT.update({basename(__file__)[:-3]: USAGE})
-MODULE_INFO.update({basename(__file__)[:-3]: module_info(name="Global Bans Utility", version=VERSION)})
+# register_module_desc(DESC)
