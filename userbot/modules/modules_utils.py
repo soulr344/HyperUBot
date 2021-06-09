@@ -82,7 +82,7 @@ async def list_commands(event):
     for cmd, value in cmds_dict.items():
         alt_cmd = value.get("alt_cmd")
         if alt_cmd:
-            all_cmds += f"`{cmd}` (`{alt_cmd}`)\t\t\t\t"
+            all_cmds += f"`{cmd}` (`{alt_cmd}`)\n"
         else:
             all_cmds += f"`{cmd}`\n"
     await event.edit(all_cmds)
