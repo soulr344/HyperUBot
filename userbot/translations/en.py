@@ -753,8 +753,9 @@ class ModuleUsages(object):
 
     MEMBERINFO_USAGE = {"minfo": {"args": ("[optional: <tag/id> <group>] or "
                                            "reply"),
-                                  "usage": ("Get (remotely) info of a member "
-                                            "in a supergroup.")}}
+                                  "usage": ("Display info of a member "
+                                            "in a supergroup. with user/admin "
+                                            "permissions.")}}
 
     MESSAGES_USAGE = {"msgs": {"args": ("[optional: <username/id> <group>] "
                                         "or reply"),
