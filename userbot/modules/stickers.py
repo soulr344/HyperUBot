@@ -17,12 +17,16 @@ import urllib.request
 from os import remove
 import os
 
-from PIL import Image
+Image = PIL.Image
 from telethon.tl.functions.messages import GetStickerSetRequest
 from telethon.tl.types import DocumentAttributeFilename, MessageMediaPhoto
 from telethon.tl.types import DocumentAttributeSticker
 from telethon.tl.types import InputStickerSetID
 from userbot.sysutils.configuration import getConfig
+from logging import getLogger
+
+log = getLogger(__name__)
+ehandler = EventHandler(log)
 LOGGING = getConfig("LOGGING")
 
 ehandler = EventHandler()
